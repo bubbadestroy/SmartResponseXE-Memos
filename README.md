@@ -1,117 +1,72 @@
-# SmartResponseXE-Memos
-
-<h1>Оглавление</h1>
+<article class="markdown-body entry-content container-lg" itemprop="text"><h1><a id="user-content-smartresponsexe-memos" class="anchor" aria-hidden="true" href="#smartresponsexe-memos"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>SmartResponseXE-Memos </h1>
+<h1><a id="user-content-оглавление" class="anchor" aria-hidden="true" href="#оглавление"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Table of contents </h1>
 <ul>
-  <li><a href="#about">Краткое описание SmartResponseXE</a>
-  <li><a href="#links">Ссылки/Документация</a>
-  <li><a href="#remake-terminal">Переделка SmartResponseXE в Arduino-SmartResponseXE</a>
-  <li><a href="#connecting-spi">Подключение к ISP (загрузка прошивки)<a>
-  <li><a href="#no-access-linux-avr-dude">Нехватка прав при попытке прошить плату в Linux с помощью avrdude</a>
-  <li><a href="#features-terminal-smart-response-xe">Особенности технической реализации SMART Response XE (клавиатура+uart)</a>
-</ul>
-
-
-
-<h2><a name="about">Краткое описание SmartResponseXE</a></h2>
-
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/SResponse.png"/>
-    
-    
-Чем интересено это устройство? Тем что построено на основе микроконтроллера ATmega128RFA1, у него есть встроенная клавиатура и замечательный монохромный дисплей. А чем же интересен микроконтроллер (<i>ATmega128RFA1</i>)? Он имеет встроенный передатчик работающий по стандарту ZigBee. И к тому же, эти железки (<i>SmartResponseXE</i>) есть в асортименте на Ebay, т.к. в своё время их закупали в больших количествах в школы, а сейчас продают по 10$ за пару штук.
-
-<a name="links"><h2>Ссылки/Документация</h2></a>
-Схемы добытые путём реверс инженеренгом и зоркими глазами - https://github.com/fdufnews/SMART-Response-XE-schematics
-
-<b>Оригинальный datasheet на чип ATmega128RFA1 (5mb!) - https://github.com/gc986/SmartResponseXE-Memos/blob/main/docs/ATmega128RFA1_Datasheeta.pdf</b>
-
-<b>SparkFun</b>
+  <li><a href="#about">SmartResponseXE Brief </a>
+  </li><li><a href="#links">Links / Documentation </a>
+  </li><li><a href="#remake-terminal">Remake SmartResponseXE Arduino-SmartResponseXE </a>
+  </li><li><a href="#connecting-spi">ISP connection (firmware download) </a>
+  </li><li><a href="#no-access-linux-avr-dude">Lack of rights when trying to flash a board in Linux using avrdude </a>
+  </li><li><a href="#features-terminal-smart-response-xe">Technical implementation considerations for SMART Response XE (keyboard + uart) </a>
+</li></ul>
+<h2><a id="user-content-краткое-описание-smartresponsexe" class="anchor" aria-hidden="true" href="#краткое-описание-smartresponsexe"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><a name="user-content-about">SmartResponseXE Brief </a></h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/SResponse.png"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/SResponse.png" style="max-width:100%;"></a></p>
+<p>Why is this device interesting? Those that are built on the basis of the ATmega128RFA1 microcontroller, it has a built-in keyboard and a wonderful monochrome display. And what is interesting about the microcontroller ( <i>ATmega128RFA1 </i>)? It has a built-in ZigBee transmitter. And besides, these pieces of iron ( <i>SmartResponseXE </i>) are in the assortment on Ebay, tk. at one time they were bought in large quantities at schools, and now they are selling for $ 10 for a couple of pieces. </p>
+<p><a name="user-content-links"></a></p><h2><a id="user-content-ссылкидокументация" class="anchor" aria-hidden="true" href="#ссылкидокументация"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><a name="user-content-links">Links / Documentation </a></h2>
+Circuits obtained by reverse engineering and keen eyes - <a href="https://github.com/fdufnews/SMART-Response-XE-schematics">https://github.com/fdufnews/SMART-Response-XE-schematics </a><p></p>
+<p><b>Original datasheet for ATmega128RFA1 chip (5mb!) - <a href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/docs/ATmega128RFA1_Datasheeta.pdf">https://github.com/gc986/SmartResponseXE-Memos/blob/main/docs/ATmega128RFA1_Datasheeta.pdf </a></b></p>
+<p><b>SparkFun </b></p>
 <ul>
-  <li>Загрузчик взят из проекта SparkFun "ATmega128RFA1 Dev Board" - https://cdn.sparkfun.com/assets/learn_tutorials/9/2/ATmega128RFA1_Addon.zip
-  (копия в текущем репозиторий "archives/bootloader-ATmega128RFA1_Addon.zip")</li>
-  <li>Страница с настройками Arduino - https://learn.sparkfun.com/tutorials/atmega128rfa1-dev-board-hookup-guide#example-code
-  (копия в текущем репозитории "docs/sparkfun_com_tutorials_atmega128rfa1_dev_board.pdf")</li>
-  <li>Оригинальный репозиторий проекта - https://github.com/sparkfun/ATmega128RFA1_Dev</li>
+  <li>The loader is taken from the SparkFun project "ATmega128RFA1 Dev Board" - <a href="https://cdn.sparkfun.com/assets/learn_tutorials/9/2/ATmega128RFA1_Addon.zip" rel="nofollow">https://cdn.sparkfun.com/assets/learn_tutorials/9/2/ATmega128RFA1_Addon.zip </a>
+   (copy in the current repository "archives / bootloader-ATmega128RFA1_Addon.zip") </li>
+  <li>Arduino settings page - <a href="https://learn.sparkfun.com/tutorials/atmega128rfa1-dev-board-hookup-guide#example-code" rel="nofollow">https://learn.sparkfun.com/tutorials/atmega128rfa1-dev-board-hookup-guide#example-code </a>
+   (copy in current repository "docs / sparkfun_com_tutorials_atmega128rfa1_dev_board.pdf") </li>
+  <li>Original project repository - <a href="https://github.com/sparkfun/ATmega128RFA1_Dev">https://github.com/sparkfun/ATmega128RFA1_Dev </a></li>
 </ul>
-
-
-Репозиторий для Arduino, по управлению клавиатурой и экраном для SmartResponseXE - https://github.com/bitbank2/SmartResponseXE
-(копия в текущем репозитории "archive/SmartResponseXE-master.zip")
-
-
-Мой форк репозитория управления клавиатурой и экраном для SmartResponseXE - добавил функции для попиксельного рисования квадратов и линий - https://github.com/gc986/SmartResponseXE
-
-
-<a name="remake-terminal"><h2>Переделка SmartResponseXE в Arduino-SmartResponseXE</h2></a>
-Чтобы переделать терминал сбора данных SmartResponseXE в Arduino, нужно немного доработать само ус-во (вывести на ружу порты для программирования платы), и залить загрузчик. После этого, ус-во будет вести себя как обычный прокаченный Arduino, с дисплеем, клавиатурой и беспроводным интерфейсом.
-
-Ниже приведёна последовательность разбора устройства. Устройство собрано на редкость хорошо, все пазы на месте, прямо такое антивандальное ус-во для использования в школах. Теме не менее будьте аккуратны при разборе, и не забудьте про винтик под батарейным блоком:
-
-
-1<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-1.jpg">
-
-2<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-2.jpg">
-
-3<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-3.jpg">
-
-4<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-4.jpg">
-
-5<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-5.jpg">
-
-6<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-6.jpg">
-
-7<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-7.jpg">
-
-8<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-8.jpg">
-
-9<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-9.jpg">
-
-10<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-10.jpg">
-
-
-<a name="connecting-spi"><h2>Подключение к ISP (загрузка прошивки)</h2></a>
-Для загрузки прошивки в микроконтроллер терминала, я пользуюсь страндартным интерфейсом ISP. Для него вынесена специальная площадка для подключения. Для удобства работы с интерфейсом,я предлагаю подпаять провода для дальнейшего подключения к программатору.
+<p>Repository for Arduino, Keyboard and Screen Controls for SmartResponseXE - <a href="https://github.com/bitbank2/SmartResponseXE">https://github.com/bitbank2/SmartResponseXE </a>
+ (copy in the current repository "archive / SmartResponseXE-master.zip") </p>
+<p>My fork of the keyboard and screen control repository for SmartResponseXE - added functions for pixel-by-pixel drawing of squares and lines - <a href="https://github.com/gc986/SmartResponseXE">https://github.com/gc986/SmartResponseXE </a></p>
+<p><a name="user-content-remake-terminal"></a></p><h2><a id="user-content-переделка-smartresponsexe-в-arduino-smartresponsexe" class="anchor" aria-hidden="true" href="#переделка-smartresponsexe-в-arduino-smartresponsexe"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><a name="user-content-remake-terminal">Переделка SmartResponseXE в Arduino-SmartResponseXE </a></h2>To convert the SmartResponseXE data collection terminal into Arduino, you need to slightly modify the device itself (bring out the ports for programming the board), and fill in the bootloader.  After that, the device will behave like a regular pumped Arduino, with a display, keyboard and wireless interface. <p></p>
+<p>Below is the sequence of parsing the device.  The device is assembled extremely well, all the grooves are in place, just such an anti-vandal device for use in schools.  Nevertheless, be careful when parsing, and do not forget about the screw under the battery pack: </p>
+<p>1 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-1.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-1.jpg" style="max-width:100%;"></a></p>
+<p>2 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-2.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-2.jpg" style="max-width:100%;"></a></p>
+<p>3 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-3.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-3.jpg" style="max-width:100%;"></a></p>
+<p>4 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-4.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-4.jpg" style="max-width:100%;"></a></p>
+<p>5 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-5.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-5.jpg" style="max-width:100%;"></a></p>
+<p>6 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-6.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-6.jpg" style="max-width:100%;"></a></p>
+<p>7 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-7.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-7.jpg" style="max-width:100%;"></a></p>
+<p>8 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-8.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-8.jpg" style="max-width:100%;"></a></p>
+<p>9 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-9.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-9.jpg" style="max-width:100%;"></a></p>
+<p>10 <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/disassembling-10.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/disassembling-10.jpg" style="max-width:100%;"></a></p>
+<p><a name="user-content-connecting-spi"></a></p><h2><a id="user-content-подключение-к-isp-загрузка-прошивки" class="anchor" aria-hidden="true" href="#подключение-к-isp-загрузка-прошивки"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><a name="user-content-connecting-spi">ISP connection (firmware download) </a></h2>To download the firmware to the terminal microcontroller, I use the standard ISP interface.  A special connection platform has been made for it.  For the convenience of working with the interface, I suggest soldering the wires for further connection to the programmer.
+ <br>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-0.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/ISP-0.jpg" style="max-width:100%;"></a></p><p></p>
+<br>To connect and use standard wires for prototyping, after cutting off the edge part.  It is very convenient that there are technological holes in the terminal case.  It is convenient to stretch the wires in them and twist them into a knot so that in the future they do not have a chance to be pulled out.
+ <br>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-1.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/ISP-1.jpg" style="max-width:100%;"></a></p>
 <br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-0.jpg">
-
-<br>
-Для подключения и использую стандартные провода для макетирования, предварительно отрезав крайнюю часть. Очень удобно что в корпусе терминала есть технологические отверстия. В них удобно протянуть провода и закрутить в узел чтобы в дальнейшем они не имели шанс быть выдернутыми.
-<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-1.jpg">
-<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-2.jpg">
-
-
-После того как вы припаяите провода, у вас может получиться следующий результат:
-<br>
-<img src="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-3.jpg">
-
-
-<a name="no-access-linux-avr-dude"><h2>Нехватка прав при попытке прошить плату в Linux с помощью avrdude</h2></a>
-
-Если при попытке прошить SmartResponseXE в Linux с помощью avrdude вы сталкиваетесь с ошибкой нехватки прав:
-
-<i><b>avrdude: usbdev_open(): cannot open device: Permission denied</b></i>
-
-То вам помогут вот эти команды:
-
-<i><b>echo "SUBSYSTEM==\\"usb\\", MODE=\\"0660\\", GROUP=\\"$(id -gn)\\"" | sudo tee /etc/udev/rules.d/00-usb-permissions.rules
-<br>
-sudo udevadm control --reload-rules</b></i>
-
-! Переподключите программатор/устройство и только после этого новые правила вступят в силу !
-
-Данные команды делает вашего пользователя Linux неограниченным пользователем USB устройств. С точки зрения безопасности это плохо, так как любой код запущенный от вашего имени будет иметь неограниченный доступ к USB устройствам, но с другой стороны ничего лучше не получилось сделать, так как разработчики avrdude работают с данными USB устройства напрямую, в обход стандартного протокола работы с USB. (оригинал https://github.com/snapcrafters/arduino/issues/10)
-
-
-<a name="features-terminal-smart-response-xe"><h2>Особенности технической реализации SMART Response XE (клавиатура+uart)</h2></a>
-Нога пятого столбца клавиатуры (клавиши 5, T, G, V), подключены на порт реализующий интерфейс подключения UART, поэтому одновременное использование UART и клаиватуры невозможно в нормальном режиме (при нажатии на клавиши пятого столбца будут происходить сробатывания десятого ряда клавиатуры, например при нажатии на клавишу T, систему будет определять что нажата клавиша P)
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-2.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/ISP-2.jpg" style="max-width:100%;"></a></p>
+<p>After you solder the wires, you might get the following result:
+ <br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/gc986/SmartResponseXE-Memos/blob/main/images/ISP-3.jpg"><img src="https://github.com/gc986/SmartResponseXE-Memos/raw/main/images/ISP-3.jpg" style="max-width:100%;"></a></p>
+<p><a name="user-content-no-access-linux-avr-dude"></a></p><h2><a id="user-content-нехватка-прав-при-попытке-прошить-плату-в-linux-с-помощью-avrdude" class="anchor" aria-hidden="true" href="#нехватка-прав-при-попытке-прошить-плату-в-linux-с-помощью-avrdude"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><a name="user-content-no-access-linux-avr-dude">Lack of rights when trying to flash a board in Linux using avrdude </a></h2><p></p>
+<p>If, when trying to flash SmartResponseXE in Linux using avrdude, you encounter an insufficient privilege error: </p>
+<p><i><b>avrdude: usbdev_open(): cannot open device: Permission denied </b></i></p>
+<p>Then these commands will help you: </p>
+<p><i><b>echo "SUBSYSTEM==\"usb\", MODE=\"0660\", GROUP=\"$(id -gn)\"" | sudo tee /etc/udev/rules.d/00-usb-permissions.rules
+ <br>
+sudo udevadm control --reload-rules </b></i></p>
+<p>!  Reconnect the programmer / device and only then the new rules will take effect! </p>
+<p>These commands make your Linux user an unrestricted user of USB devices. From a security point of view, this is bad, since any code running on your behalf will have unrestricted access to USB devices, but on the other hand, nothing better could be done, since the avrdude developers work with USB device data directly, bypassing the standard protocol for working with USB. (original <a href="https://github.com/snapcrafters/arduino/issues/10">https://github.com/snapcrafters/arduino/issues/10 </a>) </p>
+<p><a name="user-content-features-terminal-smart-response-xe"></a></p><h2><a id="user-content-особенности-технической-реализации-smart-response-xe-клавиатураuart" class="anchor" aria-hidden="true" href="#особенности-технической-реализации-smart-response-xe-клавиатураuart"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><a name="user-content-features-terminal-smart-response-xe">Technical implementation considerations for SMART Response XE (keyboard + uart) </a></h2>
+The foot of the fifth column of the keyboard (keys 5, T, G, V) are connected to the port that implements the UART connection interface, so the simultaneous use of the UART and the keyboard is impossible in normal mode (pressing the keys of the fifth column will trigger the tenth row of the keyboard, for example, when pressing on the T key, the system will detect that the P key is pressed) <p></p>
+</article>
